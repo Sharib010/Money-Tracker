@@ -27,10 +27,15 @@ const Login = () => {
           withCredentials: true,
         })
         .then((res) => {
-          alert("Login Successfully");
-          setLoginInfo({ email: "", password: "" });
-          document.cookie = `jwtoken=${res.data}`;
-          navigate("/Home");
+          
+          if (res.data.error) {
+            alert(res.data.error);
+          } else {
+            setLoginInfo({ email: "", password: "" });
+            alert("login successfully");
+            document.cookie = `jwtoken=${res.data}`;
+            navigate("/Home");
+          }
         });
     }
   };

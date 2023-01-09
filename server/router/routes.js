@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+
 const authenticate = require("../middleware/Authenticate");
 
 const userAcc = require("../model/userAcc");
@@ -34,19 +36,17 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const find_acc = await userAcc.findOne({ email: email });
-
+  var token;
   if (!find_acc) {
-    res.send("user not found");
+    res.json({ error: "invalid crediential password" });
   } else {
     const isMatch = await bcrypt.compare(password, find_acc.password);
-    token = await find_acc.generateAuthToken();
-
     if (!isMatch) {
-      res.status(400).json({ error: "invalid crediential password" });
+      res.json({ error: "invalid crediential password" });
     } else {
-      // res.json({ message: "user sigin successfully" });
-      res.send(token);
+      token = await find_acc.generateAuthToken();
       
+      res.send(token);
     }
   }
 });
@@ -57,7 +57,7 @@ router.post("/budget", async (req, res) => {
   const result = await userAcc.findOneAndUpdate(
     { email: handler_id },
     {
-      budget: budget
+      budget: budget,
     },
     { new: true, upsert: false }
   );
@@ -130,13 +130,13 @@ router.get("/getdata", authenticate, (req, res) => {
 
 router.post("/friendList", (req, res) => {
   const { handler_id, friend } = req.body;
-  var frd = friend
+  var frd = friend;
   userAcc.findOneAndUpdate(
     { email: handler_id },
     {
       $push: {
-        friends:frd
-      }
+        friends: frd,
+      },
     },
     (err, data) => {
       if (err) {
@@ -148,12 +148,11 @@ router.post("/friendList", (req, res) => {
   );
 });
 
-router.post('/deleteItem', (req, res)=>{
-  const {id} = req.body;
-  expense.deleteOne({_id:id},()=>{
-    res.send({message:"Expense Deleted"})
-  })
-
-})
+router.post("/deleteItem", (req, res) => {
+  const { id } = req.body;
+  expense.deleteOne({ _id: id }, () => {
+    res.send({ message: "Expense Deleted" });
+  });
+});
 
 module.exports = router;

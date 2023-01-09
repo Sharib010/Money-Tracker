@@ -4,7 +4,7 @@ const cors = require("cors");
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 const dotenv = require("dotenv");
 app.use(express.json());
-const cookieParser = require("cookie-parser");
+const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 PORT = 4000;
 dotenv.config({ path: "./config.env" });

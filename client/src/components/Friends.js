@@ -55,7 +55,7 @@ const Friends = () => {
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
@@ -70,10 +70,10 @@ const Friends = () => {
             </div>
             <div className="modal-body">
               <form>
-                <ul class="list-group">
+                <ul className="list-group">
                   {friendList.map((data, index) => (
-                    <li key={index} class="list-group-item">
-                      {data}
+                    <li key={!index ? "" : index} className="list-group-item">
+                      {!data ? "" : data}
                     </li>
                   ))}
                 </ul>
@@ -108,7 +108,7 @@ const Friends = () => {
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">

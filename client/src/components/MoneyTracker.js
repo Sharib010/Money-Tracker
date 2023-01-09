@@ -73,7 +73,6 @@ const MoneyTracker = () => {
       alert("fill all");
     } else {
       axios.post("http://localhost:4000/expense", expense).then((res) => {
-        
         setExpense({
           category: "",
           description: "",
@@ -84,11 +83,19 @@ const MoneyTracker = () => {
     }
   };
 
-  const totalExpense = expenseInfo.reduce(
-    (total, currentValue) => total = total + currentValue.amount,0
+  var totalExpense = 0;
+  totalExpense = expenseInfo.reduce(
+    (total, currentValue) => (total = total + currentValue.amount),
+    0
   );
 
-  const totalRemaining = accInfo.budget - totalExpense;
+  var totalRemaining = 0;
+  totalRemaining = accInfo.budget - totalExpense;
+  if (accInfo.budget === 0) {
+    totalRemaining = 0;
+  } else {
+    totalRemaining = totalRemaining;
+  }
 
   const deleteItem = (id) => {
     axios.post("http://localhost:4000/deleteItem", { id }).then((res) => {
@@ -102,11 +109,12 @@ const MoneyTracker = () => {
       <div className="container mt-4">
         <div className="d-flex mb-3">
           <div className="me-auto p-2">
-            <h3>{accInfo.name}</h3>
+            <h3>{!accInfo.name ? "" : accInfo.name}</h3>
           </div>
           <div className="p-2 mx-4 m-2 ">
             <h5>
-              Budget - <span>&#8377; {accInfo.budget}</span>
+              Budget -{" "}
+              <span>&#8377; {!accInfo.budget ? "" : accInfo.budget}</span>
             </h5>
           </div>
           <div className="p-2 mx-4 m-2 ">
@@ -167,7 +175,7 @@ const MoneyTracker = () => {
                           type="number"
                           className="form-control"
                           name="budget"
-                          value={budgetInfo.budget}
+                          value={!budgetInfo.budget ? "" : budgetInfo.budget}
                           onChange={handleBudget}
                         />
                         <span className="input-group-text">.00</span>
@@ -207,7 +215,7 @@ const MoneyTracker = () => {
               Add expense
             </button>
           </div>
-          
+
           <div className="mx-2">
             <Friends />
           </div>
@@ -295,7 +303,7 @@ const MoneyTracker = () => {
                       <input
                         type="text"
                         className="form-control"
-                        defaultValue={todayDate}
+                        defaultValue={!todayDate ? "" : todayDate}
                         id="date"
                       />
                     </div>
@@ -337,16 +345,16 @@ const MoneyTracker = () => {
             {expenseInfo.map((data, index) => (
               <tr key={index}>
                 <td className="text-wrap" style={{ width: "25rem" }}>
-                  {data.category}
+                  {!data.category ? "" : data.category}
                 </td>
                 <td className="text-wrap" style={{ width: "25rem" }}>
-                  {data.description}
+                  {!data.description ? "" : data.description}
                 </td>
                 <td className="text-wrap" style={{ width: "25rem" }}>
-                  {data.amount}
+                  {!data.amount ? "" : data.amount}
                 </td>
                 <td className="text-wrap" style={{ width: "25rem" }}>
-                  {data.date}
+                  {!data.date ? "" : data.date}
                 </td>
                 <td>
                   <svg
