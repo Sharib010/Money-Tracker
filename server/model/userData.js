@@ -18,11 +18,11 @@ const _expense = mongoose.Schema({
     required: true,
   },
   group_name: {
-    typr: String,
+    type: String,
   },
   group_member: [
     {
-      fr_name: String,
+      type:String,
     },
   ],
   date: {

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import axios from "axios";
 import Friends from "./Friends";
+import GroupExpense from "./GroupExpense";
+import Navbar from "./Navbar";
 
 const MoneyTracker = () => {
   let newDate = new Date();
@@ -11,6 +14,7 @@ const MoneyTracker = () => {
     month < 10 ? `0${month}` : `${month}`
   } / ${date}`;
 
+  const [searchFilter, setSearchFilter] = useState('')
   const [accInfo, setAccInfo] = useState("");
   const [expenseInfo, setExpesneInfo] = useState([]);
   const [budgetInfo, setBudgetInfo] = useState({
@@ -94,7 +98,7 @@ const MoneyTracker = () => {
   if (accInfo.budget === 0) {
     totalRemaining = 0;
   } else {
-    totalRemaining = totalRemaining;
+    totalRemaining = accInfo.budget - totalExpense;
   }
 
   const deleteItem = (id) => {
@@ -104,23 +108,39 @@ const MoneyTracker = () => {
     });
   };
 
+  const logoutBtn = () => {
+    Cookies.remove("jwtoken", { path: "" });
+    alert("LogOut");
+    document.location.reload();
+  };
+
   return (
     <>
+      <Navbar setSearchFilter={setSearchFilter} />
       <div className="container mt-4">
         <div className="d-flex mb-3">
           <div className="me-auto p-2">
-            <h3>{!accInfo.name ? "" : accInfo.name}</h3>
+            <h3>{!accInfo.name ? "No User Found" : accInfo.name}</h3>
           </div>
           <div className="p-2 mx-4 m-2 ">
             <h5>
-              Budget -{" "}
-              <span>&#8377; {!accInfo.budget ? "" : accInfo.budget}</span>
+              Budget = 
+              <span> {!accInfo.budget ? "" :  accInfo.budget} &#8377;</span>
             </h5>
           </div>
           <div className="p-2 mx-4 m-2 ">
             <h5>
-              Remaining - <span>&#8377; {totalRemaining}</span>
+              Remaining =  
+              <span
+                className={`${
+                  totalRemaining < 0 ? "text-danger" : "text-dark"
+                }`}
+              >  {totalRemaining} &#8377;
+              </span>
             </h5>
+            <p className={`text-danger ${totalRemaining < 0 ? "" : "d-none"}`}>
+              Over Expense Warning
+            </p>
           </div>
           <div className="p-2 m-2">
             <button
@@ -204,26 +224,33 @@ const MoneyTracker = () => {
             </div>
           </div>
         </div>
-        <div className="d-flex justify-content-end my-4">
-          <div className="mx-2 d-block">
+        <div className="d-flex  my-4">
+          <div className="p-2 flex-grow-1">
+            <button onClick={logoutBtn} className="btn btn-danger">
+              Log out
+            </button>
+          </div>
+          <div className="mx-2 p-2 d-block">
             <button
               className="btn btn-primary"
               data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
+              data-bs-target="#expense"
               data-bs-whatever="@mdo"
             >
               Add expense
             </button>
           </div>
-
-          <div className="mx-2">
+          <div className="p-2 mx-2">
+            <GroupExpense />
+          </div>
+          <div className="p-2 mx-2">
             <Friends />
           </div>
         </div>
 
         <div
           className="modal fade"
-          id="exampleModal"
+          id="expense"
           tabIndex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
@@ -336,16 +363,24 @@ const MoneyTracker = () => {
           <thead>
             <tr>
               <th scope="col">Category</th>
+              <th scope="col">Group Name</th>
+              <th scope="col">Group members</th>
               <th scope="col">Description</th>
               <th scope="col">Amount</th>
               <th scope="col">Date</th>
             </tr>
           </thead>
           <tbody>
-            {expenseInfo.map((data, index) => (
+            {expenseInfo.filter((a) =>  a.category.includes(searchFilter)).map((data, index) => (
               <tr key={index}>
                 <td className="text-wrap" style={{ width: "25rem" }}>
                   {!data.category ? "" : data.category}
+                </td>
+                <td className="text-wrap" style={{ width: "25rem" }}>
+                  {!data.group_name ? "-" : data.group_name}
+                </td>
+                <td className="text-wrap" style={{ width: "25rem" }}>
+                  {!data.group_member ? "-" : data.group_member}
                 </td>
                 <td className="text-wrap" style={{ width: "25rem" }}>
                   {!data.description ? "" : data.description}
@@ -375,7 +410,7 @@ const MoneyTracker = () => {
           </tbody>
         </table>
 
-        <div className="fixed-bottom d-flex justify-content-center py-4 px-4 bg-light">
+        <div className="fixed-bottom d-flex justify-content-center py-2 text-light bg-dark">
           <h4 className="fw-bold">Total expense = &#8377; {totalExpense}</h4>
         </div>
       </div>

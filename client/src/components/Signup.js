@@ -32,18 +32,22 @@ const Signup = () => {
       alert("fill all");
     } else {
       axios.post("http://localhost:4000/signup", accInfo).then((res) => {
-      
         alert(res.data.message);
         setAccInfo({ name: "", email: "", password: "", cpassword: "" });
         navigate("/login");
       });
     }
-
-   
   };
 
   return (
     <>
+      <nav className="navbar text-light bg-dark">
+        <div className="container">
+          <div className="mx-auto">
+            <h3>Money Tracker</h3>
+          </div>
+        </div>
+      </nav>
       <div className="container ">
         <div className="login_box">
           <p className="pt-4">Sign-up</p>
@@ -85,7 +89,7 @@ const Signup = () => {
                 <button onClick={signUp_btn} className="btn btn-primary">
                   sign-up
                 </button>
-                <Link to="/Login">already an account &rArr; </Link>
+                <Link to="/">already an account &rArr; </Link>
               </div>
             </div>
           </div>

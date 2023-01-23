@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrytpt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { types } = require("tar");
+
 
 const Accounts = mongoose.Schema({
   name: {

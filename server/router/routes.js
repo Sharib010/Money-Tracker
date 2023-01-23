@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 const authenticate = require("../middleware/Authenticate");
 
 const userAcc = require("../model/userAcc");
-
 const expense = require("../model/userData");
 
 router.post("/signup", async (req, res) => {
@@ -38,11 +37,11 @@ router.post("/login", async (req, res) => {
   const find_acc = await userAcc.findOne({ email: email });
   var token;
   if (!find_acc) {
-    res.json({ error: "invalid crediential password" });
+    res.json({ error: "invalid crediential error" });
   } else {
     const isMatch = await bcrypt.compare(password, find_acc.password);
     if (!isMatch) {
-      res.json({ error: "invalid crediential password" });
+      res.json({ error: "invalid crediential error" });
     } else {
       token = await find_acc.generateAuthToken();
       
@@ -64,42 +63,42 @@ router.post("/budget", async (req, res) => {
   res.send(result);
 });
 
-// router.post("/groupExpense", (req, res) => {
-//   const {
-//     handler_id,
-//     category,
-//     description,
-//     amount,
-//     budget,
-//     remaining,
-//     group_name,
-//     group,
-//     date,
-//   } = req.body;
-//   if (!handler_id || !category || !description || !amount) {
-//     res.send("fill  mendatoy entries");
-//   } else {
-//     const add_expense = new expense({
-//       handler_id,
-//       category,
-//       description,
-//       amount,
-//       budget,
-//       remaining,
-//       group_name,
-//       group,
-//       date,
-//     });
+router.post("/groupExpense", (req, res) => {
+  const {
+    handler_id,
+    category,
+    description,
+    amount,
+    budget,
+    remaining,
+    group_name,
+    group_member,
+    date,
+  } = req.body;
+  if (!handler_id || !category || !description || !amount) {
+    res.send("fill  mendatoy entries");
+  } else {
+    const add_expense = new expense({
+      handler_id,
+      category,
+      description,
+      amount,
+      budget,
+      remaining,
+      group_name,
+      group_member,
+      date,
+    });
 
-//     add_expense.save((err, data) => {
-//       if (err) {
-//         res.send(err);
-//       } else {
-//         res.send(data);
-//       }
-//     });
-//   }
-// });
+    add_expense.save((err, data) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(data);
+      }
+    });
+  }
+});
 
 router.post("/expense", (req, res) => {
   const { handler_id, category, description, amount, date } = req.body;

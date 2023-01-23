@@ -27,14 +27,14 @@ const Login = () => {
           withCredentials: true,
         })
         .then((res) => {
-          
           if (res.data.error) {
             alert(res.data.error);
           } else {
             setLoginInfo({ email: "", password: "" });
             alert("login successfully");
             document.cookie = `jwtoken=${res.data}`;
-            navigate("/Home");
+            document.location.reload();
+            navigate("/");
           }
         });
     }
@@ -42,6 +42,13 @@ const Login = () => {
 
   return (
     <>
+      <nav className="navbar text-light bg-dark">
+        <div className="container">
+          <div className="mx-auto">
+            <h3>Money Tracker</h3>
+          </div>
+        </div>
+      </nav>
       <div className="container my-5">
         <div className="login_box">
           <p className="pt-4">Login</p>
@@ -67,7 +74,7 @@ const Login = () => {
                 <button onClick={login_btn} className="btn btn-primary">
                   Login
                 </button>
-                <Link to="/">Sign-up &rArr; </Link>
+                <Link to="/Signup">Sign-up &rArr; </Link>
               </div>
             </div>
           </div>
